@@ -47,6 +47,8 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		64B65C1B60E19304B5B5BCBB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		7F039A4ADDE09AD73CB4D88F /* Pods-Scale_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scale_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Scale_Tests/Pods-Scale_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		969B7A511CCD1CEF00B72F4A /* ScalePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ScalePlayground.playground; sourceTree = "<group>"; };
+		969B7A521CCD1D6E00B72F4A /* Template.t */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Template.t; path = ../Pod/Classes/Definitions/Template.t; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,8 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				969B7A521CCD1D6E00B72F4A /* Template.t */,
+				969B7A511CCD1CEF00B72F4A /* ScalePlayground.playground */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Scale */,
 				607FACE81AFB9204008FA782 /* Tests */,

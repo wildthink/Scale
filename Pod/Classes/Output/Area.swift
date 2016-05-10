@@ -2,8 +2,9 @@
 //  Area.swift
 //  Scale
 //
-//  Created by Khoa Pham
-//  Copyright © 2016 Fantageek. All rights reserved.
+//  Original from Khoa Pham
+//  Updated by Jason Jobe
+//  Copyright © 2016. See LICENSE
 //
 
 import Foundation
@@ -22,7 +23,7 @@ public enum AreaUnit: Double {
     }
 }
 
-public struct Area {
+public struct Area: CustomStringConvertible {
     public let value: Double
     public let unit: AreaUnit
 
@@ -33,6 +34,10 @@ public struct Area {
 
     public func to(unit unit: AreaUnit) -> Area {
         return Area(value: self.value * self.unit.rawValue * AreaUnit.squareMeter.rawValue / unit.rawValue, unit: unit)
+    }
+
+    public var description: String {
+        return "\(value)_\(unit)"
     }
 }
 
@@ -73,6 +78,7 @@ public func compute(left: Area, right: Area, operation: (Double, Double) -> Doub
     return Area(value: result, unit: min.unit)
 }
 
+// + and - must be Unit Compatible
 public func +(left: Area, right: Area) -> Area {
     return compute(left, right: right, operation: +)
 }
@@ -81,14 +87,20 @@ public func -(left: Area, right: Area) -> Area {
     return compute(left, right: right, operation: -)
 }
 
-public func *(left: Area, right: Area) -> Area {
-    return compute(left, right: right, operation: *)
+
+// * and / _scale_ the unit value
+// For example
+// 10 meters * 10 meters != 100 meters ! It should equal the AREA 100 square_meters
+// BUT, 10_meters * 5 => 50_meters
+
+public func *(left: Area, right: Double) -> Area {
+    return  Area(value: left.value * right, unit: left.unit)
 }
 
-public func /(left: Area, right: Area) throws -> Area {
-    guard right.value != 0 else {
+public func /(left: Area, right: Double) throws -> Area {
+    guard right != 0 else {
         throw Error.DividedByZero
     }
 
-    return compute(left, right: right, operation: /)
+    return  Area(value: left.value / right, unit: left.unit)
 }

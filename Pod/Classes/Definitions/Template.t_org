@@ -11,7 +11,7 @@ import Foundation
 
 <<Def>>
 
-public struct <<Name>>: CustomStringConvertible {
+public struct <<Name>> {
     public let value: Double
     public let unit: <<UnitName>>
 
@@ -22,10 +22,6 @@ public struct <<Name>>: CustomStringConvertible {
 
     public func to(unit unit: <<UnitName>>) -> <<Name>> {
         return <<Name>>(value: self.value * self.unit.rawValue * <<UnitName>>.<<DefaultScale>>.rawValue / unit.rawValue, unit: unit)
-    }
-
-    public var description: String {
-        return "\(value)_\(unit)"
     }
 }
 
@@ -49,20 +45,25 @@ public func -(left: <<Name>>, right: <<Name>>) -> <<Name>> {
     return compute(left, right: right, operation: -)
 }
 
+public func scale(left: <<Name>>, right: Double, operation: (Double, Double) -> Double) -> <<Name>> {
+let (min, max) = left.unit.rawValue < right.unit.rawValue ? (left, right) : (right, left)
+let result = operation(min.value, max.to(unit: min.unit).value)
+
+return <<Name>>(value: result, unit: min.unit)
+}
 
 // * and / _scale_ the unit value
 // For example
 // 10 meters * 10 meters != 100 meters ! It should equal the AREA 100 square_meters
-// BUT, 10_meters * 5 => 50_meters
 
 public func *(left: <<Name>>, right: Double) -> <<Name>> {
-    return  <<Name>>(value: left.value * right, unit: left.unit)
+    return compute(left, right: right, operation: *)
 }
 
-public func /(left: <<Name>>, right: Double) throws -> <<Name>> {
-    guard right != 0 else {
+public func /(left: <<Name>>, right: <<Name>>) throws -> <<Name>> {
+    guard right.value != 0 else {
         throw Error.DividedByZero
     }
 
-    return  <<Name>>(value: left.value / right, unit: left.unit)
+    return compute(left, right: right, operation: /)
 }

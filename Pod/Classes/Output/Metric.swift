@@ -2,8 +2,9 @@
 //  Metric.swift
 //  Scale
 //
-//  Created by Khoa Pham
-//  Copyright © 2016 Fantageek. All rights reserved.
+//  Original from Khoa Pham
+//  Updated by Jason Jobe
+//  Copyright © 2016. See LICENSE
 //
 
 import Foundation
@@ -28,7 +29,7 @@ public enum MetricUnit: Double {
     }
 }
 
-public struct Metric {
+public struct Metric: CustomStringConvertible {
     public let value: Double
     public let unit: MetricUnit
 
@@ -39,6 +40,10 @@ public struct Metric {
 
     public func to(unit unit: MetricUnit) -> Metric {
         return Metric(value: self.value * self.unit.rawValue * MetricUnit.base.rawValue / unit.rawValue, unit: unit)
+    }
+
+    public var description: String {
+        return "\(value)_\(unit)"
     }
 }
 
@@ -103,6 +108,7 @@ public func compute(left: Metric, right: Metric, operation: (Double, Double) -> 
     return Metric(value: result, unit: min.unit)
 }
 
+// + and - must be Unit Compatible
 public func +(left: Metric, right: Metric) -> Metric {
     return compute(left, right: right, operation: +)
 }
@@ -111,14 +117,20 @@ public func -(left: Metric, right: Metric) -> Metric {
     return compute(left, right: right, operation: -)
 }
 
-public func *(left: Metric, right: Metric) -> Metric {
-    return compute(left, right: right, operation: *)
+
+// * and / _scale_ the unit value
+// For example
+// 10 meters * 10 meters != 100 meters ! It should equal the AREA 100 square_meters
+// BUT, 10_meters * 5 => 50_meters
+
+public func *(left: Metric, right: Double) -> Metric {
+    return  Metric(value: left.value * right, unit: left.unit)
 }
 
-public func /(left: Metric, right: Metric) throws -> Metric {
-    guard right.value != 0 else {
+public func /(left: Metric, right: Double) throws -> Metric {
+    guard right != 0 else {
         throw Error.DividedByZero
     }
 
-    return compute(left, right: right, operation: /)
+    return  Metric(value: left.value / right, unit: left.unit)
 }

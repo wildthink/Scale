@@ -37,6 +37,11 @@ let weight = 10.0.kilogram * 5.gram // 50000 gram
 let angle = 5.degree + 2.radian
 ```
 
+- Length
+```swift
+let length = 5.yard + 2.meter
+```
+
 - Area
 ```swift
 let area = 5.acre + 2.hectare
@@ -65,11 +70,6 @@ let temperature = 5.fahrenheit + 2.celsius
 - Time
 ```swift
 let time = 5.day + 2.hour
-```
-
-- Length
-```swift
-let length = 5.yard + 2.meter
 ```
 
 - Weight
