@@ -104,3 +104,19 @@ public func /(left: Area, right: Double) throws -> Area {
 
     return  Area(value: left.value / right, unit: left.unit)
 }
+
+// Length -> Area
+public func *(left: Length, right: Length) -> Area {
+    return  Area(value: left.value * right.value, unit:.squareMeter)
+}
+
+public func /(left: Area, right: Area) throws -> Double {
+    guard right.value != 0 else {
+        throw Error.DividedByZero
+    }
+
+    return  left.value / right.value
+}
+
+
+
