@@ -9,7 +9,7 @@
 
 import Foundation
 
-public enum TimeUnit: Double {
+public enum TimeUnit: NSTimeInterval {
     case nanosecond = 0.000_000_001
     case microsecond = 0.000_001
     case millisecond = 0.001
@@ -20,22 +20,24 @@ public enum TimeUnit: Double {
     case day = 86_400
     case week = 604_800
     case fortnight = 1_209_600
+    case half_month = 1_314_911.482_92
     case month = 2_629_822.965_84
+    case quarter = 7_889_468.897_52
     case year = 31_536_000
     case decade = 315_360_000
     case century = 3_153_600_000
     case millennium = 31_536_000_000
 
-    static var defaultScale: Double {
+    static var defaultScale: NSTimeInterval {
         return TimeUnit.second.rawValue
     }
 }
 
 public struct Time: CustomStringConvertible {
-    public let value: Double
+    public let value: NSTimeInterval
     public let unit: TimeUnit
 
-    public init(value: Double, unit: TimeUnit) {
+    public init(value: NSTimeInterval, unit: TimeUnit) {
         self.value = value
         self.unit = unit
     }
@@ -44,12 +46,16 @@ public struct Time: CustomStringConvertible {
         return Time(value: self.value * self.unit.rawValue * TimeUnit.second.rawValue / unit.rawValue, unit: unit)
     }
 
+//    public func value(in unit: TimeUnit) -> NSTimeInterval {
+//        return self.value * self.unit.rawValue * TimeUnit.second.rawValue / unit.rawValue, unit: unit)
+//    }
+
     public var description: String {
         return "\(value)_\(unit)"
     }
 }
 
-public extension Double {
+public extension NSTimeInterval {
     public var nanosecond: Time {
         return Time(value: self, unit: .nanosecond)
     }
@@ -111,7 +117,7 @@ public extension Double {
     }
 }
 
-public func compute(left: Time, right: Time, operation: (Double, Double) -> Double) -> Time {
+public func compute(left: Time, right: Time, operation: (NSTimeInterval, NSTimeInterval) -> NSTimeInterval) -> Time {
     let (min, max) = left.unit.rawValue < right.unit.rawValue ? (left, right) : (right, left)
     let result = operation(min.value, max.to(unit: min.unit).value)
 
@@ -133,11 +139,11 @@ public func -(left: Time, right: Time) -> Time {
 // 10 meters * 10 meters != 100 meters ! It should equal the AREA 100 square_meters
 // BUT, 10_meters * 5 => 50_meters
 
-public func *(left: Time, right: Double) -> Time {
+public func *(left: Time, right: NSTimeInterval) -> Time {
     return  Time(value: left.value * right, unit: left.unit)
 }
 
-public func /(left: Time, right: Double) throws -> Time {
+public func /(left: Time, right: NSTimeInterval) throws -> Time {
     guard right != 0 else {
         throw Error.DividedByZero
     }
